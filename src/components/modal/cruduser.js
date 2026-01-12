@@ -17,15 +17,16 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import ResetPassword from "./resetpassword";
-import axios from "axios";
 import Loading from "@/components/loading";
 import { useAlert } from "@/contexts/alertContext";
 import Alerts from "@/components/modal/alertcompenent";
 import { useSession } from "next-auth/react";
+import useAxiosAuth from "@/utils/useAxiosAuth";
 
 export default function CRUDuser({ open, mode, handleClose, selectUser }) {
   const { data: session } = useSession();
   const { addAlert } = useAlert();
+  const axiosAuth = useAxiosAuth();
   
   const [loadings, setLoadings] = useState(false);
   const [openResetPassword, setOpenResetPassword] = useState(false);
@@ -119,8 +120,7 @@ export default function CRUDuser({ open, mode, handleClose, selectUser }) {
     try {
       setLoadings(true);
       if (formData.id == "") {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/user`,
+        const response = await axiosAuth.post("/api/user",
           {
             username: formData.username,
             firstname: formData.firstname,
@@ -153,8 +153,7 @@ export default function CRUDuser({ open, mode, handleClose, selectUser }) {
           username,
         });
       } else {
-        const response = await axios.put(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/user`,
+         const response = await axiosAuth.put("/api/user",
           {
             id: formData.id,
             firstname: formData.firstname,
@@ -196,10 +195,7 @@ export default function CRUDuser({ open, mode, handleClose, selectUser }) {
   const handleDelete = async () => {
     try {
       setLoadings(true);
-      const response = await axios.delete(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/user/${formData.id}`,
-        {}
-      );
+      const response = await axiosAuth.delete(`/api/user/${formData.id}`,{});
 
       const { data } = response;
       handleSuccess(data.message);

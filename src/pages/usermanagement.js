@@ -4,7 +4,7 @@ import { Space, Table } from "antd/lib";
 import { MdOutlineModeEdit, MdOutlineDelete } from "react-icons/md";
 import TextField from "@mui/material/TextField";
 import CRUDuser from "@/components/modal/cruduser";
-import axios from "axios";
+import useAxiosAuth from "@/utils/useAxiosAuth";
 import Loading from "@/components/loading";
 import { useAlert } from "@/contexts/alertContext";
 import Alerts from "@/components/modal/alertcompenent";
@@ -18,6 +18,7 @@ export default function Usermanagement() {
   const { addAlert } = useAlert();
   const [searchText, setSearchText] = useState("");
   const [data, setData] = useState([]);
+  const axiosAuth = useAxiosAuth();
 
   const [openCreateUser, setOpenCreateUser] = useState(false);
   const [openEditUser, setOpenEditUser] = useState(false);
@@ -78,8 +79,8 @@ export default function Usermanagement() {
   const fetchdata = async () => {
     try {
       setLoadings(true);
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/user`,
+      const response = await axiosAuth.get(
+        "/api/user",
         {}
       );
       const { data } = response;

@@ -8,15 +8,16 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import PropTypes from "prop-types";
 import PasswordInput from "../passwordinput";
-import axios from "axios";
 import Loading from "@/components/loading";
 import { useAlert } from "@/contexts/alertContext";
 import Alerts from "@/components/modal/alertcompenent";
 import { useSession } from "next-auth/react";
+import useAxiosAuth from "@/utils/useAxiosAuth";
 
 
 export default function ResetPassword({ open, handleClose, data }) {
   const { data: session } = useSession();
+  const axiosAuth = useAxiosAuth();
   const { addAlert } = useAlert();
   const [loadings, setLoadings] = useState(false);
   const [formData, setFormData] = useState({
@@ -76,8 +77,7 @@ export default function ResetPassword({ open, handleClose, data }) {
   const updatePassword = async (formData) => {
     try {
       setLoadings(true);
-      const response = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/password`,
+      const response = await axiosAuth.put("/api/password",
         {
           id: formData.id,
           password: formData.password,
