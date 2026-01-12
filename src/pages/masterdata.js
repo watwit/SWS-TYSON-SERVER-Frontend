@@ -5,7 +5,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import MasterdataTabpanel from "@/components/masterdataTabpanel";
-import Material from "@/components/masterdata/material";
+import Standard from "@/components/masterdata/standard";
 
 const AntTabs = styled(Tabs)({
   borderBottom: "1px solid #e8e8e8",
@@ -57,7 +57,7 @@ export default function Masterdata() {
               </AntTabs>
 
               <MasterdataTabpanel value={value} index={0}>
-                <Material />
+                <Standard />
               </MasterdataTabpanel>
               <Box />
             </Box>

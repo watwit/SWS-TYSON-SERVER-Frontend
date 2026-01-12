@@ -17,5 +17,5 @@ MasterdataTabpanel.propTypes = {
     children: PropTypes.node.isRequired,
     value: PropTypes.number.isRequired,
     index: PropTypes.number.isRequired,
-  };
+};
 

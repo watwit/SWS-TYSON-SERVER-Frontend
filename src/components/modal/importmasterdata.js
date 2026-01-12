@@ -12,13 +12,12 @@ import { useAlert } from "@/contexts/alertContext";
 import Alerts from "@/components/modal/alertcompenent";
 import { Upload, message } from "antd";
 import { MdUploadFile } from "react-icons/md";
+import useAxiosAuth from "@/utils/useAxiosAuth";
 import { Switch } from 'antd';
-import axios from "axios";
-import { useSession } from "next-auth/react";
 
 export default function ImportMasterData({ open, handleClose }) {
+    const axiosAuth = useAxiosAuth();
     const { addAlert } = useAlert();
-    const { data: session } = useSession();
     const [loadings, setLoadings] = useState(false);
     const [fileList, setFileList] = useState([]);
     const [replace, setReplace] = useState(false);
@@ -38,11 +37,10 @@ export default function ImportMasterData({ open, handleClose }) {
         const formData = new FormData();
         formData.append("file", fileList[0]);
         formData.append("replace", replace)
-        formData.append("username", session?.user.username || "unknown");
 
         try {
             setLoadings(true);
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/masterdata/import`, formData, {
+            const response = await axiosAuth.post('/api/masterdata/import', formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -171,7 +169,7 @@ export default function ImportMasterData({ open, handleClose }) {
                             </Button>
                         </Upload>
                         <div className="flex gap-2">
-                            <p>Replace data if duplicate product code:</p>
+                            <p>Replace data if duplicate material code:</p>
                             <Switch className="bg-grey" onChange={onReplaceChange} />
                         </div>
 
