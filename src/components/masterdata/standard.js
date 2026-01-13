@@ -12,6 +12,7 @@ import useAxiosAuth from "@/utils/useAxiosAuth";
 import ImportMasterData from "../modal/importmasterdata";
 import { MdOutlineModeEdit, MdOutlineDelete } from "react-icons/md";
 import CRUDMasterData from "../modal/crudmasterdata";
+import {getRowClassName} from "@/utils/tableClassName";
 
 const { Column } = Table;
 
@@ -132,11 +133,6 @@ export default function Standard() {
     fetchdata();
   }, [fetchdata]);
 
-  const rowClassName = (record, index) => {
-    return index % 2 === 0
-      ? "atn-table-row-bottom-border ant-table-row-odd"
-      : "atn-table-row-bottom-border ant-table-row-even";
-  };
 
   return (
     <div className="w-full mt-4">
@@ -175,9 +171,9 @@ export default function Standard() {
       <Table
         dataSource={data}
         rowKey="id"
-        rowClassName={rowClassName}
+        rowClassName={getRowClassName}
         rootClassName="maintain"
-        pagination={{ pageSize: 8 }}
+        pagination={{ pageSize: 10 }}
         scroll={{ x: 'max-content' }}
       >
         <Column

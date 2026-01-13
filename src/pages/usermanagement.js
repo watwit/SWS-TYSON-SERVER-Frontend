@@ -11,6 +11,7 @@ import Alerts from "@/components/modal/alertcompenent";
 import ProtectedRoute from "@/components/protectedRoute";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { sorterStringWithNull } from "@/utils/sorter";
+import {getRowClassName} from "@/utils/tableClassName";
 
 const { Column } = Table;
 
@@ -98,11 +99,6 @@ export default function Usermanagement() {
     fetchdata();
   }, []);
 
-  const rowClassName = (record, index) => {
-    return index % 2 === 0
-      ? "atn-table-row-bottom-border ant-table-row-odd"
-      : "atn-table-row-bottom-border ant-table-row-even";
-  };
   return (
     <ProtectedRoute>
       <div className="flex flex-col flex-wrap justify-between p-4 gap-8 container mx-auto">
@@ -133,7 +129,7 @@ export default function Usermanagement() {
             dataSource={data}
             rowKey="id"
             pagination={{ pageSize: 10 }}
-            rowClassName={rowClassName}
+            rowClassName={getRowClassName}
             rootClassName="maintain"
           >
             <Column

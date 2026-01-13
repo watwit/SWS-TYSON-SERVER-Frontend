@@ -12,16 +12,21 @@ import { useAlert } from "@/contexts/alertContext";
 import Alerts from "@/components/modal/alertcompenent";
 import { Upload, message } from "antd";
 import { MdUploadFile } from "react-icons/md";
-import axios from "axios";
-import { useSession } from "next-auth/react";
+import useAxiosAuth from "@/utils/useAxiosAuth";
+import { Switch } from 'antd';
 
-export default function ImportProductionOrder({ open, handleClose }) {
+export default function ImportOrder({ open, handleClose }) {
+    const axiosAuth = useAxiosAuth();
     const { addAlert } = useAlert();
-    const { data: session } = useSession();
     const [loadings, setLoadings] = useState(false);
     const [fileList, setFileList] = useState([]);
+    const [replace, setReplace] = useState(false);
     const [invalidData, setInvalidData] = useState([]);
     const [status, setStatus] = useState(null);
+
+    const onReplaceChange = (checked) => {
+        setReplace(checked);
+    };
 
     const handleUpload = async () => {
         if (fileList.length === 0) {
@@ -31,11 +36,11 @@ export default function ImportProductionOrder({ open, handleClose }) {
 
         const formData = new FormData();
         formData.append("file", fileList[0]);
-        formData.append("username", session?.user.username || "unknown");
+        formData.append("replace", replace)
 
         try {
             setLoadings(true);
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/productionOrder/import`, formData, {
+            const response = await axiosAuth.post('/api/order/import', formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -111,6 +116,7 @@ export default function ImportProductionOrder({ open, handleClose }) {
     useEffect(() => {
         setLoadings(false);
         setFileList([]);
+        setReplace(false);
         setInvalidData([]);
         setStatus(null);
     }, [open]);
@@ -162,6 +168,10 @@ export default function ImportProductionOrder({ open, handleClose }) {
                                 Select .xlsx File
                             </Button>
                         </Upload>
+                        <div className="flex gap-2">
+                            <p>Replace data if duplicate Produce date, Production order, Material, Material type:</p>
+                            <Switch className="bg-grey" onChange={onReplaceChange} />
+                        </div>
 
                         {invalidData.length > 0 && (
                             <div
@@ -209,7 +219,7 @@ export default function ImportProductionOrder({ open, handleClose }) {
     );
 }
 
-ImportProductionOrder.propTypes = {
+ImportOrder.propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
 };
